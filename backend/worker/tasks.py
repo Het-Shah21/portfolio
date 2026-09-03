@@ -1,9 +1,10 @@
 import asyncio
 import sqlite3
-import smtplib
+import urllib.request
+import json
 from datetime import datetime
-from email.message import EmailMessage
 from arq.connections import RedisSettings
+import os
 
 def save_to_db(name: str, email: str, message: str):
     conn = sqlite3.connect('contacts.db')
@@ -26,31 +27,32 @@ async def send_contact_email(ctx, name: str, email: str, message: str):
     save_to_db(name, email, message)
     print("Message securely saved to contacts.db")
 
-    # 2. Send Real Email Notification (Instant Alert)
-    SENDER_EMAIL = "hetshahclg@gmail.com"
-    APP_PASSWORD = "hhup znva wuaz lhqt"
-    RECEIVER_EMAIL = "hetshahclg@gmail.com"
-
-    msg = EmailMessage()
-    msg.set_content(f"New Portfolio Submission:\n\nName: {name}\nEmail: {email}\n\nMessage:\n{message}")
-    msg['Subject'] = f"Portfolio Contact from {name}"
-    msg['From'] = SENDER_EMAIL
-    msg['To'] = RECEIVER_EMAIL
+    # 2. Send Email via Web3Forms API (Bypasses Render SMTP Firewall)
+    WEB3FORMS_ACCESS_KEY = "d85e26f1-42cd-443b-bc59-a13488d6d78a"
+    
+    payload = {
+        "access_key": WEB3FORMS_ACCESS_KEY,
+        "name": name,
+        "email": email,
+        "message": message,
+        "subject": f"Portfolio Contact from {name}"
+    }
     
     try:
-        # Connect to Gmail's SMTP server and send the email
-        server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-        server.login(SENDER_EMAIL, APP_PASSWORD)
-        server.send_message(msg)
-        server.quit()
-        print("Email notification successfully processed.")
+        data = json.dumps(payload).encode('utf-8')
+        req = urllib.request.Request(
+            "https://api.web3forms.com/submit", 
+            data=data, 
+            headers={'Content-Type': 'application/json'}
+        )
+        with urllib.request.urlopen(req) as response:
+            print("Web3Forms email successfully delivered!")
     except Exception as e:
-        print(f"Failed to send email: {e}")
+        print(f"Failed to send email via Web3Forms: {e}")
         
     return True
 
 class WorkerSettings:
     functions = [send_contact_email]
-    import os
     redis_url = os.getenv("REDIS_URL", "redis://localhost:6379")
     redis_settings = RedisSettings.from_dsn(redis_url)
