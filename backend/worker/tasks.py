@@ -51,4 +51,6 @@ async def send_contact_email(ctx, name: str, email: str, message: str):
 
 class WorkerSettings:
     functions = [send_contact_email]
-    redis_settings = RedisSettings(host='localhost', port=6379)
+    import os
+    redis_url = os.getenv("REDIS_URL", "redis://localhost:6379")
+    redis_settings = RedisSettings.from_dsn(redis_url)

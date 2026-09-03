@@ -8,8 +8,10 @@ router = APIRouter()
 @router.post("/contact", response_model=ContactResponse)
 async def submit_contact_form(request: ContactRequest):
     try:
-        # Enqueue the task
-        redis = await create_pool(RedisSettings(host='localhost', port=6379))
+        # Enqueue the task using dynamic Redis URL for production
+        import os
+        redis_url = os.getenv("REDIS_URL", "redis://localhost:6379")
+        redis = await create_pool(RedisSettings.from_dsn(redis_url))
         await redis.enqueue_job(
             'send_contact_email', 
             request.name, 
