@@ -10,10 +10,10 @@ export function Hero() {
       <Scene3D />
       
       {/* Overlay Content */}
-      <div className="relative z-10 container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 pointer-events-none">
+      <div className="relative z-10 container mx-auto px-6 pt-32 pb-16 lg:py-0 grid grid-cols-1 lg:grid-cols-2 gap-12 pointer-events-none">
         
         {/* Left Column: Text & Telemetry */}
-        <div className="flex flex-col justify-center gap-8 pointer-events-auto">
+        <div className="flex flex-col justify-center gap-6 md:gap-8 pointer-events-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -22,33 +22,33 @@ export function Hero() {
             <h1 className="text-5xl md:text-7xl font-bold font-serif text-white mb-4">
               {resume.name}
             </h1>
-            <p className="text-xl text-sky-400 font-mono mb-6 uppercase tracking-wider">
+            <p className="text-lg md:text-xl text-sky-400 font-mono mb-6 uppercase tracking-wider">
               {resume.role}
             </p>
-            <p className="text-slate-300 text-lg max-w-xl font-sans leading-relaxed">
+            <p className="text-slate-300 text-base md:text-lg max-w-xl font-sans leading-relaxed">
               {resume.hero.tagline}
             </p>
           </motion.div>
 
           {/* Telemetry Stats Strip */}
           <motion.div 
-            className="flex gap-8 border-t border-slate-800 pt-6 mt-4"
+            className="flex gap-4 md:gap-8 justify-between lg:justify-start border-t border-slate-800 pt-6 mt-2 md:mt-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.8 }}
           >
             {resume.hero.telemetry.map((stat, idx) => (
               <div key={idx} className="flex flex-col">
-                <span className="text-xs text-slate-500 font-mono mb-1">{stat.label}</span>
-                <span className="text-2xl text-white font-bold font-mono">{stat.value}</span>
+                <span className="text-[10px] md:text-xs text-slate-500 font-mono mb-1">{stat.label}</span>
+                <span className="text-lg md:text-2xl text-white font-bold font-mono whitespace-nowrap">{stat.value}</span>
               </div>
             ))}
           </motion.div>
         </div>
 
         {/* Right Column: Holographic Profile Photo */}
-        <div className="flex items-center justify-center pointer-events-auto mt-12 lg:mt-0">
-          <div className="w-full max-w-sm aspect-[3/4] border border-sky-500/30 rounded-xl relative overflow-hidden group bg-slate-900/50 backdrop-blur-sm shadow-[0_0_30px_rgba(14,165,233,0.1)]">
+        <div className="flex items-center justify-center pointer-events-auto mt-6 lg:mt-0 lg:order-none">
+          <div className="w-48 lg:w-full lg:max-w-sm aspect-square lg:aspect-[3/4] border border-sky-500/30 rounded-full lg:rounded-xl relative overflow-hidden group bg-slate-900/50 backdrop-blur-sm shadow-[0_0_30px_rgba(14,165,233,0.1)]">
             {/* The Image (Replace with your actual photo path once you upload it) */}
             <img 
               src="/profile.jpeg" 
