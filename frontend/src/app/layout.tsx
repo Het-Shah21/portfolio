@@ -17,9 +17,11 @@ const jetbrains = JetBrains_Mono({
   variable: "--font-jetbrains"
 });
 
+import { resume } from "@/data/resume";
+
 export const metadata: Metadata = {
-  title: "Jane Doe | 3D Creative Developer",
-  description: "Portfolio of Jane Doe, 3D Creative Developer and Data Scientist.",
+  title: `${resume.name} | ${resume.title}`,
+  description: `Portfolio of ${resume.name}, ${resume.title}.`,
 };
 
 export default function RootLayout({

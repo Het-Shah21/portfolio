@@ -47,7 +47,7 @@ export function Hero() {
         </div>
 
         {/* Right Column: Holographic Profile Photo */}
-        <div className="hidden lg:flex items-center justify-center pointer-events-auto">
+        <div className="flex items-center justify-center pointer-events-auto mt-12 lg:mt-0">
           <div className="w-full max-w-sm aspect-[3/4] border border-sky-500/30 rounded-xl relative overflow-hidden group bg-slate-900/50 backdrop-blur-sm shadow-[0_0_30px_rgba(14,165,233,0.1)]">
             {/* The Image (Replace with your actual photo path once you upload it) */}
             <img 
