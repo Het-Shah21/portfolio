@@ -41,8 +41,8 @@ services:
     buildCommand: "npm ci && npm run build"
     startCommand: "npm start"
     envVars:
-      - key: NEXT_PUBLIC_API_URL
+      - key: NEXT_PUBLIC_API_HOST
         fromService:
           type: web
           name: portfolio-backend
-          property: url
+          property: host

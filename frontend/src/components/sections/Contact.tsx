@@ -23,7 +23,10 @@ export function Contact() {
     };
 
     try {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+      const API_URL = process.env.NEXT_PUBLIC_API_HOST 
+        ? `https://${process.env.NEXT_PUBLIC_API_HOST}` 
+        : (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000");
+        
       const res = await fetch(`${API_URL}/api/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
