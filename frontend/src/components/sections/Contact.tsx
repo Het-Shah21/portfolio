@@ -23,21 +23,44 @@ export function Contact() {
     };
 
     try {
-      const API_URL = process.env.NEXT_PUBLIC_API_HOST 
-        ? `https://${process.env.NEXT_PUBLIC_API_HOST}` 
-        : (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000");
-        
-      const res = await fetch(`${API_URL}/api/contact`, {
+      // 1. Send Real Email via Web3Forms (Directly from Browser)
+      const emailRes = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: "d85e26f1-42cd-443b-bc59-a13488d6d78a",
+          name: data.name,
+          email: data.email,
+          message: data.message,
+          subject: `Portfolio Contact from ${data.name}`,
+        }),
       });
 
-      if (!res.ok) throw new Error("Failed to transmit");
-      
-      setStatus("success");
-      setMessage("Transmission successful. Your message has been queued.");
-      (e.target as HTMLFormElement).reset();
+      // 2. Queue background task in FastAPI + Redis (for SQLite database logging)
+      try {
+        const API_URL = process.env.NEXT_PUBLIC_API_HOST 
+          ? `https://${process.env.NEXT_PUBLIC_API_HOST}` 
+          : (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000");
+          
+        await fetch(`${API_URL}/api/contact`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+      } catch (backendErr) {
+        console.warn("Backend logging failed, but email was sent via Web3Forms", backendErr);
+      }
+
+      if (emailRes.ok) {
+        setStatus("success");
+        setMessage("Transmission successful. Your message has been queued.");
+        (e.target as HTMLFormElement).reset();
+      } else {
+        throw new Error("Web3Forms submission failed");
+      }
     } catch (err) {
       setStatus("error");
       setMessage("Transmission failed. Please check network connection or verify the FastAPI backend is running.");
