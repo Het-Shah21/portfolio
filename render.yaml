@@ -5,13 +5,13 @@ services:
     ipAllowList: []
     plan: free
 
-  # 2. FastAPI Backend Service
+  # 2. FastAPI Backend & Worker (Combined for Free Tier)
   - type: web
     name: portfolio-backend
     env: python
     rootDir: backend
     buildCommand: "pip install -r requirements.txt"
-    startCommand: "uvicorn main:app --host 0.0.0.0 --port $PORT"
+    startCommand: "arq worker.tasks.WorkerSettings & uvicorn main:app --host 0.0.0.0 --port $PORT"
     envVars:
       - key: REDIS_URL
         fromService:
@@ -19,21 +19,7 @@ services:
           name: portfolio-redis
           property: connectionString
 
-  # 3. Arq Background Worker
-  - type: worker
-    name: portfolio-worker
-    env: python
-    rootDir: backend
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "arq worker.tasks.WorkerSettings"
-    envVars:
-      - key: REDIS_URL
-        fromService:
-          type: redis
-          name: portfolio-redis
-          property: connectionString
-
-  # 4. Next.js Frontend
+  # 3. Next.js Frontend
   - type: web
     name: portfolio-frontend
     env: node
