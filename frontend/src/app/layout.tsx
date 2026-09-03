@@ -20,8 +20,8 @@ const jetbrains = JetBrains_Mono({
 import { resume } from "@/data/resume";
 
 export const metadata: Metadata = {
-  title: `${resume.name} | ${resume.title}`,
-  description: `Portfolio of ${resume.name}, ${resume.title}.`,
+  title: `${resume.name} | ${resume.role}`,
+  description: `Portfolio of ${resume.name}, ${resume.role}.`,
 };
 
 export default function RootLayout({
